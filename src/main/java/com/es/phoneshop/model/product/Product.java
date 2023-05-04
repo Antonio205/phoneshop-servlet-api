@@ -2,9 +2,11 @@ package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Product {
-    private Long id;
+    private long id;
     private String code;
     private String description;
     /** null means there is no price because the product is outdated or new */
@@ -15,10 +17,19 @@ public class Product {
     private String imageUrl;
 
     public Product() {
+        UUID uuid = UUID.randomUUID();
+        this.id = uuid.getMostSignificantBits();
+        this.code = "";
+        this.description = "";
+        this.price = BigDecimal.ZERO;
+        this.currency = Currency.getInstance("USD");
+        this.stock = 0;
+        this.imageUrl = "";
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = id;
+    public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+        UUID uuid = UUID.randomUUID();
+        this.id = uuid.getMostSignificantBits();
         this.code = code;
         this.description = description;
         this.price = price;
@@ -27,11 +38,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -81,5 +92,18 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
