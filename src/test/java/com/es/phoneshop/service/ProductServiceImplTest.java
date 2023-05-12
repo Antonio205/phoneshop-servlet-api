@@ -1,34 +1,32 @@
 package com.es.phoneshop.service;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.Mock;
+import com.es.phoneshop.dao.ProductDaoImpl;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+
 public class ProductServiceImplTest {
 
     private ProductServiceImpl productService;
-
     @Mock
-    private ProductDao productDaoMock;
+    private ProductDaoImpl productDaoMock;
 
     @Before
     public void setup() {
         productService = ProductServiceImpl.getInstance();
-        productDaoMock = Mockito.mock(ProductDao.class);
+        productDaoMock = Mockito.mock(ProductDaoImpl.class);
         productService.setProductDao(productDaoMock);
     }
 
@@ -42,10 +40,9 @@ public class ProductServiceImplTest {
         product.setStock(10);
 
         Mockito.when(productDaoMock.getProduct(1L)).thenReturn(Optional.of(product));
-        Optional<Product> result = productService.getProduct(1L);
+        Product result = productService.getProduct(1L);
 
-        assertTrue(result.isPresent());
-        assertEquals(product, result.get());
+        assertEquals(product, result);
     }
 
     @Test

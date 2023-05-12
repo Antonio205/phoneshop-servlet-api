@@ -1,20 +1,31 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.price.PriceHistory;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Currency;
-import java.util.Objects;
+import java.util.List;
 import java.util.UUID;
+import java.util.Date;
+import java.util.Objects;
 
 public class Product {
+
     private long id;
     private String code;
     private String description;
-    /** null means there is no price because the product is outdated or new */
+    /**
+     * null means there is no price because the product is outdated or new
+     */
     private BigDecimal price;
-    /** can be null if the price is null */
+    /**
+     * can be null if the price is null
+     */
     private Currency currency;
     private int stock;
     private String imageUrl;
+    private List<PriceHistory> priceHistory;
 
     public Product() {
         UUID uuid = UUID.randomUUID();
@@ -25,6 +36,8 @@ public class Product {
         this.currency = Currency.getInstance("USD");
         this.stock = 0;
         this.imageUrl = "";
+        this.priceHistory = new ArrayList<>();
+        priceHistory.add(new PriceHistory(price, new Date()));
     }
 
     public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
@@ -36,6 +49,8 @@ public class Product {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
+        this.priceHistory = new ArrayList<>();
+        priceHistory.add(new PriceHistory(price, new Date()));
     }
 
     public long getId() {
@@ -67,6 +82,7 @@ public class Product {
     }
 
     public void setPrice(BigDecimal price) {
+        priceHistory.add(new PriceHistory(price, new Date()));
         this.price = price;
     }
 
@@ -92,6 +108,14 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<PriceHistory> getPriceHistory() {
+        return priceHistory;
+    }
+
+    public void setPriceHistory(List<PriceHistory> priceHistory) {
+        this.priceHistory = priceHistory;
     }
 
     @Override
