@@ -1,4 +1,4 @@
-package com.es.phoneshop.service;
+package com.es.phoneshop.service.impl;
 
 import com.es.phoneshop.dao.ProductDaoImpl;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
@@ -19,9 +19,10 @@ import static org.junit.Assert.assertFalse;
 
 public class ProductServiceImplTest {
 
-    private ProductServiceImpl productService;
     @Mock
     private ProductDaoImpl productDaoMock;
+
+    private ProductServiceImpl productService;
 
     @Before
     public void setup() {

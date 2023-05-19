@@ -1,8 +1,8 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.listener;
 
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.ProductService;
-import com.es.phoneshop.service.ProductServiceImpl;
+import com.es.phoneshop.service.impl.ProductServiceImpl;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;

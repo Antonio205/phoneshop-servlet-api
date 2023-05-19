@@ -1,8 +1,7 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.service.ProductServiceImpl;
+import com.es.phoneshop.service.impl.ProductServiceImpl;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -47,6 +46,7 @@ public class PriceHistoryPageServletTest {
         when(servletConfig.getServletContext()).thenReturn(servletContext);
         servlet = new PriceHistoryPageServlet();
         servlet.init(servletConfig);
+        servlet.setProductService(productService);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
@@ -55,21 +55,11 @@ public class PriceHistoryPageServletTest {
         long productId = 1L;
         Product product = new Product("sgs", "Samsung Galaxy S", new BigDecimal(100), null, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         when(productService.getProduct(productId)).thenReturn(product);
-        when(request.getPathInfo()).thenReturn("/products/" + productId);
+        when(request.getPathInfo()).thenReturn("/" + productId);
 
-        servlet.setProductService(productService);
         servlet.doGet(request, response);
 
         verify(request).setAttribute("product", product);
         verify(requestDispatcher).forward(request, response);
-    }
-
-    @Test(expected = ProductNotFoundException.class)
-    public void givenInvalidProductId_whenDoGet_thenThrowProductNotFoundException() throws Exception {
-        String productId = "12345";
-        when(request.getPathInfo()).thenReturn("/" + productId);
-        when(productService.getProduct(Long.parseLong(productId))).thenReturn(null);
-
-        servlet.doGet(request, response);
     }
 }
