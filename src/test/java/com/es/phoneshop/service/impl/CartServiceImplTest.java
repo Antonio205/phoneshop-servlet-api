@@ -12,9 +12,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -33,6 +39,9 @@ public class CartServiceImplTest {
     private Cart cart;
 
     @Mock
+    private CartItem cartItem;
+
+    @Mock
     private HttpSession session;
 
     @Mock
@@ -48,7 +57,7 @@ public class CartServiceImplTest {
         MockitoAnnotations.initMocks(this);
         cartService = CartServiceImpl.getInstance();
         productService = mock(ProductService.class);
-        product = new Product("TestProduct", "TestBrand", null, null, 10, null);
+        product = new Product("TestProduct", "TestBrand", new BigDecimal(1), null, 10, null);
         when(productService.getProduct(anyLong())).thenReturn(product);
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute(cartService.getCartSessionAttribute())).thenReturn(cart);
@@ -72,7 +81,7 @@ public class CartServiceImplTest {
     }
 
     @Test
-    public void testValidProduct_whenAddToCart_thenCorrectAddToCart() throws OutOfStockException {
+    public void givenValidProduct_whenAddToCart_thenCorrectAddToCart() throws OutOfStockException {
         Product product = new Product();
         product.setStock(10);
         Cart cart = new Cart();
@@ -92,6 +101,54 @@ public class CartServiceImplTest {
         int quantity = 10;
 
         cartService.addToCart(productService.getProduct(1L), quantity, request);
+    }
+
+    @Test
+    public void givenValidCartItems_whenDeleteCart_thenRemovesCartItemFromCart() {
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(cartItem);
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("cart")).thenReturn(cart);
+        when(cart.getItems()).thenReturn(cartItems);
+        when(cartItem.getProduct()).thenReturn(product);
+
+        cartService.deleteCart(product, request);
+
+        assertFalse(cartService.getCart(request).getItems().contains(cartItem));
+    }
+
+    @Test
+    public void givenExistingCartItem_whenUpdateCart_thenUpdatesCartItemQuantity() throws OutOfStockException {
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(cartItem);
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("cart")).thenReturn(cart);
+        when(cart.getItems()).thenReturn(cartItems);
+        when(cartItem.getProduct()).thenReturn(product);
+        product.setStock(10);
+
+        cartService.updateCart(product, 5, request);
+
+        assertTrue(cartService.getCart(request).getItems().contains(cartItem));
+    }
+
+    @Test
+    public void givenNonExistingCartItem_whenUpdateCart_thenAddsNewCartItemToCart() throws OutOfStockException {
+        List<CartItem> cartItems = new ArrayList<>();
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("cart")).thenReturn(cart);
+        when(cart.getItems()).thenReturn(cartItems);
+        product.setStock(10);
+
+        cartService.updateCart(product, 5, request);
+
+        assertFalse(cartService.getCart(request).getItems().contains(cartItem));
+    }
+
+    @Test(expected = OutOfStockException.class)
+    public void givenOutOfStockException_whenUpdateCart_thenThrowsException() throws OutOfStockException {
+        product.setStock(5);
+        cartService.updateCart(product, 10, request);
     }
 }
 
