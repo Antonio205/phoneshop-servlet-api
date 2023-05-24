@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.cart;
+package com.es.phoneshop.validator;
 
 public class CartQuantityValidator {
 

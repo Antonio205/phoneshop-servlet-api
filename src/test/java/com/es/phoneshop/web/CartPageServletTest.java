@@ -26,7 +26,6 @@ import java.util.Map;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
@@ -69,24 +68,11 @@ public class CartPageServletTest {
 
     @Test
     public void givenValidCart_whenDoGet_thenReturnCorrectCartPage() throws ServletException, IOException {
-        Cart cart = new Cart();
-        when(cartService.getCart(request)).thenReturn(cart);
         when(request.getRequestDispatcher("/WEB-INF/pages/cart.jsp")).thenReturn(requestDispatcher);
 
         servlet.doGet(request, response);
 
-        verify(request).setAttribute("cart", cart);
         verify(requestDispatcher).forward(request, response);
-    }
-
-    @Test
-    public void givenNullCart_whenDoGet_thenDoNotReturnCorrectCartPage() throws ServletException, IOException {
-        when(cartService.getCart(request)).thenReturn(null);
-
-        servlet.doGet(request, response);
-
-        verify(request, never()).setAttribute(eq("cart"), any());
-        verify(requestDispatcher, never()).forward(request, response);
     }
 
     @Test

@@ -73,7 +73,7 @@ public class DeleteCartItemServletTest {
         servlet.doPost(request, response);
 
         verify(productService, times(1)).getProduct(1L);
-        verify(cartService, times(1)).deleteCart(product, request);
+        verify(cartService, times(1)).deleteCartItem(product, request);
         verify(response, times(1)).sendRedirect(request.getContextPath() +
                 "/cart?message=Cart item removed successfully");
     }

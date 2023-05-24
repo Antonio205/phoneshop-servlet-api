@@ -6,9 +6,6 @@
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="session"/>
 
 <tags:master pageTitle="Cart">
-    <p>
-        Cart: ${cart}
-    </p>
     <c:if test="${not empty param.message && empty errors}">
         <div class="success">
             ${param.message}

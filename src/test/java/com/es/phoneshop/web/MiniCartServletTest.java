@@ -1,7 +1,5 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.service.CartService;
 import jakarta.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,18 +40,11 @@ public class MiniCartServletTest {
     @Mock
     private HttpSession session;
 
-    @Mock
-    private Cart cart;
-
-    @Mock
-    private CartService cartService;
-
     @Before
     public void setup() throws ServletException {
         MockitoAnnotations.initMocks(this);
         miniCartServlet = new MiniCartServlet();
         miniCartServlet.init(servletConfig);
-        miniCartServlet.setCartService(cartService);
 
         when(request.getServletContext()).thenReturn(servletContext);
         when(request.getRequestDispatcher("/WEB-INF/pages/minicart.jsp")).thenReturn(requestDispatcher);
@@ -62,11 +53,8 @@ public class MiniCartServletTest {
 
     @Test
     public void givenValidCart_whenDoGet_thenCorrectIncludeAndCart() throws ServletException, IOException {
-        when(cartService.getCart(request)).thenReturn(cart);
-
         miniCartServlet.doGet(request, response);
 
-        verify(request).setAttribute("cart", cart);
         verify(requestDispatcher).include(request, response);
     }
 

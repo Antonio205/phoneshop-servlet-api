@@ -28,12 +28,12 @@ public class DeleteCartItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String productId = request.getPathInfo();
-        while (productId != null && productId.contains("/")) {
+        if (productId != null && productId.contains("/")) {
             productId = productId.substring(productId.indexOf('/') + 1);
         }
         Product product = productService.getProduct(Long.parseLong(productId));
 
-        cartService.deleteCart(product, request);
+        cartService.deleteCartItem(product, request);
 
         response.sendRedirect(request.getContextPath() + "/cart?message=Cart item removed successfully");
     }

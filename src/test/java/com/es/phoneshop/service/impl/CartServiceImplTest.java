@@ -112,7 +112,7 @@ public class CartServiceImplTest {
         when(cart.getItems()).thenReturn(cartItems);
         when(cartItem.getProduct()).thenReturn(product);
 
-        cartService.deleteCart(product, request);
+        cartService.deleteCartItem(product, request);
 
         assertFalse(cartService.getCart(request).getItems().contains(cartItem));
     }
@@ -148,6 +148,7 @@ public class CartServiceImplTest {
     @Test(expected = OutOfStockException.class)
     public void givenOutOfStockException_whenUpdateCart_thenThrowsException() throws OutOfStockException {
         product.setStock(5);
+
         cartService.updateCart(product, 10, request);
     }
 }

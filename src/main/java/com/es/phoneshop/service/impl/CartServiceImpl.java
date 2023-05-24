@@ -84,7 +84,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCart(Product product, HttpServletRequest request) {
+    public void deleteCartItem(Product product, HttpServletRequest request) {
         HttpSession session = request.getSession();
         synchronized (session) {
             Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);

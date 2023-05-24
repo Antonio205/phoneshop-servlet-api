@@ -89,7 +89,7 @@
 
     <servlet-mapping>
         <servlet-name>miniCart</servlet-name>
-        <url-pattern>/cart/minicart</url-pattern>
+        <url-pattern>/minicart</url-pattern>
     </servlet-mapping>
 
     <error-page>
