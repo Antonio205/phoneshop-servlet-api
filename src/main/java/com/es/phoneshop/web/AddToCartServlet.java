@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class AddCartServlet extends HttpServlet {
+public class AddToCartServlet extends HttpServlet {
 
     private ProductService productService;
+    private ProductListPageServlet productListPageServlet;
     private CartService cartService;
 
     @Override
@@ -29,26 +29,8 @@ public class AddCartServlet extends HttpServlet {
         super.init(config);
         productService = ProductServiceImpl.getInstance();
         cartService = CartServiceImpl.getInstance();
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String query = request.getParameter("query");
-        String sortField = request.getParameter("sort");
-        String sortOrder = request.getParameter("order");
-
-        List<Product> products;
-
-        if (query != null && sortField != null && sortOrder != null) {
-            products = productService.findProducts(query, sortField, sortOrder);
-        } else if (query != null) {
-            products = productService.findProducts(query);
-        } else {
-            products = productService.findProducts();
-        }
-
-        request.setAttribute("products", products);
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+        productListPageServlet = new ProductListPageServlet();
+        productListPageServlet.init(config);
     }
 
     @Override
@@ -59,32 +41,27 @@ public class AddCartServlet extends HttpServlet {
         }
         Product product = productService.getProduct(Long.parseLong(productId));
         String quantity = request.getParameter("quantity");
+        long currentId = product.getId();
 
         Map<Long, String> errors = new HashMap<>();
         try {
             NumberFormat format = NumberFormat.getInstance(request.getLocale());
             cartService.addToCart(product, format.parse(quantity).intValue(), request);
-        } catch (OutOfStockException | ParseException ex) {
-            handleException(errors, product.getId(), ex);
+        } catch (OutOfStockException ex) {
+            if (ex.getStockRequested() <= 0) {
+                errors.put(currentId, "Can't be negative or zero");
+            } else {
+                errors.put(currentId, "Out of stock, available " + ex.getStockAvailable());
+            }
+        } catch (ParseException ex) {
+            errors.put(currentId, "Not a number");
         }
 
         if (errors.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/products?message=Cart item added successfully");
         } else {
             request.setAttribute("errors", errors);
-            doGet(request, response);
-        }
-    }
-
-    private void handleException(Map<Long, String> errors, long productId, Exception ex) {
-        if (ex.getClass().equals(ParseException.class)) {
-            errors.put(productId, "Not a number");
-        } else {
-            if (((OutOfStockException) ex).getStockRequested() <= 0) {
-                errors.put(productId, "Cant be negative or zero");
-            } else {
-                errors.put(productId, "Out of stock, available " + ((OutOfStockException) ex).getStockAvailable());
-            }
+            productListPageServlet.doGet(request, response);
         }
     }
 

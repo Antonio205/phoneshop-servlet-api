@@ -74,7 +74,7 @@
 
     <servlet>
         <servlet-name>addCart</servlet-name>
-        <servlet-class>com.es.phoneshop.web.AddCartServlet</servlet-class>
+        <servlet-class>com.es.phoneshop.web.AddToCartServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

@@ -39,7 +39,7 @@ public class CartServiceImpl implements CartService {
     public void addToCart(Product product, int quantity, HttpServletRequest request) throws OutOfStockException {
         HttpSession session = request.getSession();
         synchronized (session) {
-            Cart cart = getCart(request);
+            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
             Optional<CartItem> existingCartItem = cart.getItems().stream()
                     .filter(item -> item.getProduct().equals(product))
                     .findAny();
@@ -65,7 +65,7 @@ public class CartServiceImpl implements CartService {
     public void updateCart(Product product, int quantity, HttpServletRequest request) throws OutOfStockException {
         HttpSession session = request.getSession();
         synchronized (session) {
-            Cart cart = getCart(request);
+            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
             Optional<CartItem> existingCartItem = cart.getItems().stream()
                     .filter(item -> item.getProduct().equals(product))
                     .findAny();
@@ -87,7 +87,7 @@ public class CartServiceImpl implements CartService {
     public void deleteCart(Product product, HttpServletRequest request) {
         HttpSession session = request.getSession();
         synchronized (session) {
-            Cart cart = getCart(request);
+            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
             cart.getItems().removeIf(cartItem -> cartItem.getProduct().equals(product));
             recalculateCart(cart);
         }

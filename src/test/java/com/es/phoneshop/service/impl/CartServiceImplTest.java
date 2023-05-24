@@ -104,7 +104,7 @@ public class CartServiceImplTest {
     }
 
     @Test
-    public void givenValidCartItems_whenDeleteCart_thenRemovesCartItemFromCart() {
+    public void givenCartItems_whenDeleteCart_thenRemovesCartItemFromCart() {
         List<CartItem> cartItems = new ArrayList<>();
         cartItems.add(cartItem);
         when(request.getSession()).thenReturn(session);

@@ -28,7 +28,7 @@
     <input name="query" value="${param.query}">
     <button>Search</button>
   </form>
-
+  <c:set var="contextPath" value="${pageContext.servletContext.contextPath}"/>
   <table>
     <thead>
       <tr>
@@ -57,12 +57,12 @@
           <img class="product-tile" src="${product.imageUrl}">
         </td>
         <td>
-            <a href="${pageContext.servletContext.contextPath}/products/${product.id}">
+            <a href="${contextPath}/products/${product.id}">
                 ${product.description}
             </a>
         </td>
         <c:set var="error" value="${errors[product.id]}"/>
-        <form action="${pageContext.servletContext.contextPath}/addCart/${product.id}" method="post">
+        <form action="${contextPath}/addCart/${product.id}" method="post">
           <input type="hidden" name="productId" value="${product.id}"/>
           <td class="quantity">
               <input name="quantity" value="${not empty error ? paramValues['quantity'][status.index] : 1}" class="quantity" type="number" min="1" pattern="[0-9]+"/>
@@ -79,7 +79,7 @@
         </form>
 
         <td class="price">
-            <a href="${pageContext.servletContext.contextPath}/priceHistory/${product.id}"/>
+            <a href="${contextPath}/priceHistory/${product.id}"/>
                  <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
             </a>
         </td>

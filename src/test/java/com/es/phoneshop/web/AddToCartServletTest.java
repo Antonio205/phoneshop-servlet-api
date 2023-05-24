@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.anyLong;
 
-public class AddCartServletTest {
+public class AddToCartServletTest {
 
     @Mock
     private ProductService productService;
@@ -46,12 +46,12 @@ public class AddCartServletTest {
     @Mock
     private HttpServletResponse response;
 
-    private AddCartServlet servlet;
+    private AddToCartServlet servlet;
 
     @Before
     public void setup() throws ServletException {
         MockitoAnnotations.initMocks(this);
-        servlet = new AddCartServlet();
+        servlet = new AddToCartServlet();
         servlet.init(config);
         servlet.setProductService(productService);
         servlet.setCartService(cartService);
@@ -59,7 +59,7 @@ public class AddCartServletTest {
     }
 
     @Test
-    public void givenValidRequest_whenDoPost_thenAddProductToCart() throws ServletException, IOException, OutOfStockException, ParseException {
+    public void givenRequest_whenDoPost_thenAddProductToCart() throws ServletException, IOException, OutOfStockException, ParseException {
         String productId = "1";
         String quantity = "2";
         Product product = new Product();
