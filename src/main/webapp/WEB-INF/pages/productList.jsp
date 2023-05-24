@@ -62,7 +62,7 @@
             </a>
         </td>
         <c:set var="error" value="${errors[product.id]}"/>
-        <form action="${contextPath}/addCart/${product.id}" method="post">
+        <form action="${contextPath}/addToCart/${product.id}" method="post">
           <input type="hidden" name="productId" value="${product.id}"/>
           <td class="quantity">
               <input name="quantity" value="${not empty error ? paramValues['quantity'][status.index] : 1}" class="quantity" type="number" min="1" pattern="[0-9]+"/>
