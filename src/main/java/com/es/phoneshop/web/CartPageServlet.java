@@ -12,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,19 +37,21 @@ public class CartPageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String[] productIds = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
         Map<Long, String> errors = new HashMap<>();
 
+        HttpSession session = request.getSession();
         if (productIds != null) {
             updatingOfCart(productIds, quantities, request, errors);
 
             if (errors.isEmpty()) {
+                session.setAttribute("updatingErrors", null);
                 response.sendRedirect(request.getContextPath() + "/cart?message=Cart updated successfully");
             } else {
-                request.setAttribute("errors", errors);
-                doGet(request, response);
+                session.setAttribute("updatingErrors", errors);
+                response.sendRedirect(request.getContextPath() + "/cart");
             }
         } else {
             response.sendRedirect(request.getContextPath() + "/cart");

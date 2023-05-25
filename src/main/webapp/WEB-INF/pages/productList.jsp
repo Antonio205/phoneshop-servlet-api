@@ -13,12 +13,12 @@
        Cart: ${cart}
   </p>
 
-  <c:if test="${not empty param.message && empty errors}">
+  <c:if test="${not empty param.message && empty addingErrors}">
          <div class="success">
              ${param.message}
          </div>
   </c:if>
-  <c:if test="${not empty errors}">
+  <c:if test="${not empty addingErrors}">
       <div class="error">
           An error occurred during adding product
       </div>
@@ -61,14 +61,14 @@
                 ${product.description}
             </a>
         </td>
-        <c:set var="error" value="${errors[product.id]}"/>
+        <c:set var="error" value="${addingErrors[product.id]}"/>
         <form action="${contextPath}/addToCart/${product.id}" method="post">
           <input type="hidden" name="productId" value="${product.id}"/>
           <td class="quantity">
               <input name="quantity" value="${not empty error ? paramValues['quantity'][status.index] : 1}" class="quantity" type="number" min="1" pattern="[0-9]+"/>
-              <c:if test="${not empty errors}">
+              <c:if test="${not empty addingErrors}">
                   <div class="error">
-                      ${errors[product.id]}
+                      ${addingErrors[product.id]}
                   </div>
               </c:if>
           </td>

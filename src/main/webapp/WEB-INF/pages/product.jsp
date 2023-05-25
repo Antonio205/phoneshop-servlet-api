@@ -9,12 +9,12 @@
   <p>
     ${product.description}
   </p>
-  <c:if test="${not empty param.message && empty error}">
+  <c:if test="${not empty param.message && empty param.error}">
          <div class="success">
              ${param.message}
          </div>
   </c:if>
-  <c:if test="${not empty error}">
+  <c:if test="${not empty param.error}">
            <div class="error">
                Error in adding to cart
            </div>
@@ -53,10 +53,10 @@
           <tr>
               <td>Quantity</td>
               <td>
-                 <input name="quantity" value="${not empty error ? param.quantity : 1}" class="quantity" type="number"  min="1" pattern="[0-9]+">
-                 <c:if test="${not empty error}">
+                 <input name="quantity" value="${not empty param.error ? param.quantity : 1}" class="quantity" type="number"  min="1" pattern="[0-9]+">
+                 <c:if test="${not empty param.error}">
                      <div class="error">
-                         ${error}
+                         ${param.error}
                      </div>
                  </c:if>
               </td>

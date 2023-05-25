@@ -48,7 +48,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String quantityString = request.getParameter("quantity");
         long productId = parseProductId(request);
         int quantity;
@@ -57,8 +57,8 @@ public class ProductDetailsPageServlet extends HttpServlet {
             NumberFormat format = NumberFormat.getInstance(request.getLocale());
             quantity = format.parse(quantityString).intValue();
         } catch (ParseException ex) {
-            request.setAttribute("error", "Not a number");
-            doGet(request, response);
+            response.sendRedirect(request.getContextPath() + "/products/" +
+                    productId + "?error=Not a number");
             return;
         }
 
@@ -66,8 +66,8 @@ public class ProductDetailsPageServlet extends HttpServlet {
             Product product = productService.getProduct(productId);
             cartService.addToCart(product, quantity, request);
         } catch (OutOfStockException e) {
-            request.setAttribute("error", "Out of stock, available " + e.getStockAvailable());
-            doGet(request, response);
+            response.sendRedirect(request.getContextPath() + "/products/" +
+                    productId + "?error=Out of stock, available " + e.getStockAvailable());
             return;
         }
 

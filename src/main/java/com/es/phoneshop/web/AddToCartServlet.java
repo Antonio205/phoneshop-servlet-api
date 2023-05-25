@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -57,11 +58,13 @@ public class AddToCartServlet extends HttpServlet {
             errors.put(currentId, "Not a number");
         }
 
+        HttpSession session = request.getSession();
         if (errors.isEmpty()) {
+            session.setAttribute("addingErrors", null);
             response.sendRedirect(request.getContextPath() + "/products?message=Cart item added successfully");
         } else {
-            request.setAttribute("errors", errors);
-            productListPageServlet.doGet(request, response);
+            session.setAttribute("addingErrors", errors);
+            response.sendRedirect(request.getContextPath() + "/products");
         }
     }
 
