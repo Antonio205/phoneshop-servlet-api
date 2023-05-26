@@ -118,7 +118,7 @@ public class CartPageServletTest {
         servlet.doPost(request, response);
 
         verify(cartService).updateCart(product, 10, request);
-        verify(session).setAttribute(eq("updatingErrors"), any(Map.class));
-        verify(response).sendRedirect(any());
+        verify(request).setAttribute(eq("errors"), any(Map.class));
+        verify(requestDispatcher).forward(request, response);
     }
 }

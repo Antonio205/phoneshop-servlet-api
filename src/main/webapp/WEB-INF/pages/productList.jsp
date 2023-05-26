@@ -2,9 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
-
 <tags:master pageTitle="Product List">
   <p>
     Welcome to Expert-Soft training!
@@ -13,17 +11,16 @@
        Cart: ${cart}
   </p>
 
-  <c:if test="${not empty param.message && empty addingErrors}">
+  <c:if test="${not empty param.message && empty errors}">
          <div class="success">
              ${param.message}
          </div>
   </c:if>
-  <c:if test="${not empty addingErrors}">
+  <c:if test="${not empty errors}">
       <div class="error">
           An error occurred during adding product
       </div>
   </c:if>
-
   <form>
     <input name="query" value="${param.query}">
     <button>Search</button>
@@ -61,23 +58,21 @@
                 ${product.description}
             </a>
         </td>
-        <c:set var="error" value="${addingErrors[product.id]}"/>
+        <c:set var="error" value="${errors[product.id]}"/>
         <form action="${contextPath}/addToCart/${product.id}" method="post">
           <input type="hidden" name="productId" value="${product.id}"/>
           <td class="quantity">
               <input name="quantity" value="${not empty error ? paramValues['quantity'][status.index] : 1}" class="quantity" type="number" min="1" pattern="[0-9]+"/>
-              <c:if test="${not empty addingErrors}">
+              <c:if test="${not empty errors}">
                   <div class="error">
-                      ${addingErrors[product.id]}
+                      ${errors[product.id]}
                   </div>
               </c:if>
           </td>
-
           <td>
             <button type="submit">Add to cart</button>
           </td>
         </form>
-
         <td class="price">
             <a href="${contextPath}/priceHistory/${product.id}"/>
                  <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
@@ -86,6 +81,5 @@
       </tr>
     </c:forEach>
   </table>
-
   <%@ include file="/WEB-INF/pages/recentlyViewedProducts.jsp"%>
 </tags:master>

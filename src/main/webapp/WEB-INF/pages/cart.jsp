@@ -6,12 +6,12 @@
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="session"/>
 
 <tags:master pageTitle="Cart">
-    <c:if test="${not empty param.message && empty updatingErrors}">
+    <c:if test="${not empty param.message && empty errors}">
         <div class="success">
             ${param.message}
         </div>
     </c:if>
-    <c:if test="${not empty updatingErrors}">
+    <c:if test="${not empty errors}">
         <div class="error">
             An error occurred during the update
         </div>
@@ -48,11 +48,11 @@
                         </a>
                     </td>
                     <td class="quantity">
-                        <c:set var="error" value="${updatingErrors[product.id]}"/>
+                        <c:set var="error" value="${errors[product.id]}"/>
                         <input name="quantity" value="${not empty error ? paramValues['quantity'][status.index] : item.quantity}" class="quantity" type="number"  min="1" pattern="[0-9]+"/>
-                        <c:if test="${not empty updatingErrors[product.id]}">
+                        <c:if test="${not empty errors[product.id]}">
                             <div class="error">
-                                ${updatingErrors[product.id]}
+                                ${errors[product.id]}
                             </div>
                         </c:if>
                         <input type="hidden" name="productId" value="${product.id}"/>
