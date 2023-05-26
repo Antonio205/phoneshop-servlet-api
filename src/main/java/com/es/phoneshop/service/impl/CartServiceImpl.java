@@ -70,7 +70,6 @@ public class CartServiceImpl implements CartService {
                     .filter(item -> item.getProduct().equals(product))
                     .findAny();
             if (product.getStock() < quantity) {
-                session.setAttribute("cart", cart);
                 throw new OutOfStockException(product, quantity, product.getStock());
             }
 
