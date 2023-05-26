@@ -22,7 +22,9 @@ import java.text.ParseException;
 public class ProductDetailsPageServlet extends HttpServlet {
 
     private RecentlyViewedProductsService recentlyViewedProductsService;
+
     private ProductService productService;
+
     private CartService cartService;
 
     @Override
@@ -38,11 +40,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
         long id = parseProductId(request);
         Product product = productService.getProduct(id);
         HttpSession session = request.getSession();
-
         if (product != null) {
             recentlyViewedProductsService.addRecentlyViewedProduct(session, product);
             request.setAttribute("product", product);
-
             request.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(request, response);
         }
     }
@@ -79,7 +79,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
         if (productId != null && productId.contains("/")) {
             productId = productId.substring(productId.indexOf('/') + 1);
         }
-
         return Long.parseLong(productId);
     }
 

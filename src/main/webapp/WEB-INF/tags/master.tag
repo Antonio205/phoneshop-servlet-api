@@ -13,6 +13,7 @@
       <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
       PhoneShop
     </a>
+    <%@ include file="/WEB-INF/pages/minicart.jsp"%>
   </header>
   <main>
     <jsp:doBody/>

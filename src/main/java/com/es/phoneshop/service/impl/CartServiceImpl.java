@@ -8,12 +8,13 @@ import com.es.phoneshop.service.CartService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class CartServiceImpl implements CartService {
 
-    private final String CART_SESSION_ATTRIBUTE = "cart";
     private static CartServiceImpl instance;
+    private final String CART_SESSION_ATTRIBUTE = "cart";
 
     private CartServiceImpl() {
 
@@ -38,9 +39,8 @@ public class CartServiceImpl implements CartService {
     public void addToCart(Product product, int quantity, HttpServletRequest request) throws OutOfStockException {
         HttpSession session = request.getSession();
         synchronized (session) {
-            Cart cart = getCart(request);
-            Optional<CartItem> existingCartItem = cart.getItems()
-                    .stream()
+            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
+            Optional<CartItem> existingCartItem = cart.getItems().stream()
                     .filter(item -> item.getProduct().equals(product))
                     .findAny();
 
@@ -57,7 +57,50 @@ public class CartServiceImpl implements CartService {
                 }
                 cart.getItems().add(new CartItem(product, quantity));
             }
+            recalculateCart(cart);
         }
+    }
+
+    @Override
+    public void updateCart(Product product, int quantity, HttpServletRequest request) throws OutOfStockException {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
+            Optional<CartItem> existingCartItem = cart.getItems().stream()
+                    .filter(item -> item.getProduct().equals(product))
+                    .findAny();
+            if (product.getStock() < quantity) {
+                throw new OutOfStockException(product, quantity, product.getStock());
+            }
+
+            if (existingCartItem.isPresent()) {
+                CartItem cartItem = existingCartItem.get();
+                cartItem.setQuantity(quantity);
+            } else {
+                cart.getItems().add(new CartItem(product, quantity));
+            }
+            recalculateCart(cart);
+        }
+    }
+
+    @Override
+    public void deleteCartItem(Product product, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
+            cart.getItems().removeIf(cartItem -> cartItem.getProduct().equals(product));
+            recalculateCart(cart);
+        }
+    }
+
+    protected void recalculateCart(Cart cart) {
+        cart.setTotalQuantity(cart.getItems().stream()
+                .map(CartItem::getQuantity)
+                .mapToInt(q -> q).sum());
+
+        cart.setTotalCost(cart.getItems().stream()
+                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     public String getCartSessionAttribute() {
