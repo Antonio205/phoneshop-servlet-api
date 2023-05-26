@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -21,7 +22,9 @@ import java.text.ParseException;
 public class ProductDetailsPageServlet extends HttpServlet {
 
     private RecentlyViewedProductsService recentlyViewedProductsService;
+
     private ProductService productService;
+
     private CartService cartService;
 
     @Override
@@ -49,6 +52,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         String quantityString = request.getParameter("quantity");
         long productId = parseProductId(request);
         int quantity;
+
         try {
             NumberFormat format = NumberFormat.getInstance(request.getLocale());
             quantity = format.parse(quantityString).intValue();

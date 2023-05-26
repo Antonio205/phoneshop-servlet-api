@@ -18,7 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CartPageServlet extends HttpServlet {
+
     private ProductService productService;
+
     private CartService cartService;
 
     @Override

@@ -21,7 +21,9 @@ import java.util.Map;
 public class AddToCartServlet extends HttpServlet {
 
     private ProductService productService;
+
     private ProductListPageServlet productListPageServlet;
+
     private CartService cartService;
 
     @Override
