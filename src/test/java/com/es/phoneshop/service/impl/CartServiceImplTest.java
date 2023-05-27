@@ -44,7 +44,6 @@ public class CartServiceImplTest {
     @Mock
     private HttpSession session;
 
-    @Mock
     private CartServiceImpl cartService;
 
     @Mock
@@ -78,6 +77,17 @@ public class CartServiceImplTest {
 
         assertSame(cart, resultCart);
         verify(request.getSession(), never()).setAttribute(eq(cartService.getCartSessionAttribute()), any(Cart.class));
+    }
+
+    @Test
+    public void givenCartItems_whenClearCart_thenClearCart() {
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(new CartItem(new Product(), 3));
+        cartService.getCart(request).setItems(cartItems);
+
+        cartService.clearCart(request);
+
+        assertTrue(cartService.getCart(request).getItems().isEmpty());
     }
 
     @Test

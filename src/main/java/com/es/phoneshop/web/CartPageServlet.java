@@ -1,18 +1,17 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.exceptions.OutOfStockException;
-import com.es.phoneshop.validator.CartQuantityValidator;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.CartService;
 import com.es.phoneshop.service.ProductService;
 import com.es.phoneshop.service.impl.CartServiceImpl;
 import com.es.phoneshop.service.impl.ProductServiceImpl;
+import com.es.phoneshop.validator.CartQuantityValidator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,21 +36,19 @@ public class CartPageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] productIds = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
         Map<Long, String> errors = new HashMap<>();
 
-        HttpSession session = request.getSession();
         if (productIds != null) {
             updatingOfCart(productIds, quantities, request, errors);
 
             if (errors.isEmpty()) {
-                session.setAttribute("updatingErrors", null);
                 response.sendRedirect(request.getContextPath() + "/cart?message=Cart updated successfully");
             } else {
-                session.setAttribute("updatingErrors", errors);
-                response.sendRedirect(request.getContextPath() + "/cart");
+                request.setAttribute("errors", errors);
+                doGet(request, response);
             }
         } else {
             response.sendRedirect(request.getContextPath() + "/cart");
@@ -61,14 +58,12 @@ public class CartPageServlet extends HttpServlet {
     private void updatingOfCart(String[] productIds, String[] quantities, HttpServletRequest request, Map<Long, String> errors) {
         for (int i = 0; i < productIds.length; ++i) {
             long productId = Long.parseLong(productIds[i]);
-
             String quantityInput = quantities[i];
             CartQuantityValidator cartQuantityValidator = CartQuantityValidator.getInstance();
             if (!cartQuantityValidator.validateQuantityFormat(quantityInput)) {
                 errors.put(productId, "Not a number");
                 continue;
             }
-
             int quantity = Integer.parseInt(quantityInput);
             try {
                 Product product = productService.getProduct(productId);

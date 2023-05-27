@@ -1,6 +1,6 @@
 package com.es.phoneshop.service.impl;
 
-import com.es.phoneshop.dao.ProductDaoImpl;
+import com.es.phoneshop.dao.impl.ProductDaoImpl;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class ProductServiceImplTest {
         product.setPrice(new BigDecimal(2));
         product.setStock(10);
 
-        Mockito.when(productDaoMock.getProduct(1L)).thenReturn(Optional.of(product));
+        Mockito.when(productDaoMock.getItem(1L)).thenReturn(Optional.of(product));
         Product result = productService.getProduct(1L);
 
         assertEquals(product, result);
@@ -96,7 +96,7 @@ public class ProductServiceImplTest {
 
     @Test(expected = ProductNotFoundException.class)
     public void givenInvalidProductId_whenGetProduct_thenThrowProductNotFoundException() throws ProductNotFoundException {
-        Mockito.when(productDaoMock.getProduct(1L)).thenReturn(Optional.empty());
+        Mockito.when(productDaoMock.getItem(1L)).thenReturn(Optional.empty());
 
         productService.getProduct(1L);
     }

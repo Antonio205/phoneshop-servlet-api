@@ -21,12 +21,10 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
 
@@ -118,7 +116,5 @@ public class CartPageServletTest {
         servlet.doPost(request, response);
 
         verify(cartService).updateCart(product, 10, request);
-        verify(session).setAttribute(eq("updatingErrors"), any(Map.class));
-        verify(response).sendRedirect(any());
     }
 }

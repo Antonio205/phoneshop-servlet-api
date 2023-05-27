@@ -2,19 +2,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
-
 <tags:master pageTitle="Product List">
   <p>
     ${product.description}
   </p>
-  <c:if test="${not empty param.message && empty param.error}">
+  <c:if test="${not empty param.message && empty error}">
          <div class="success">
              ${param.message}
          </div>
   </c:if>
-  <c:if test="${not empty param.error}">
+  <c:if test="${not empty error}">
            <div class="error">
                Error in adding to cart
            </div>
@@ -53,10 +51,10 @@
           <tr>
               <td>Quantity</td>
               <td>
-                 <input name="quantity" value="${not empty param.error ? param.quantity : 1}" class="quantity" type="number"  min="1" pattern="[0-9]+">
-                 <c:if test="${not empty param.error}">
+                 <input name="quantity" value="${not empty error ? param.quantity : 1}" class="quantity" type="number"  min="1" pattern="[0-9]+">
+                 <c:if test="${not empty error}">
                      <div class="error">
-                         ${param.error}
+                         ${error}
                      </div>
                  </c:if>
               </td>
@@ -64,6 +62,5 @@
       </table>
       <button>Add to cart</button>
   </form>
-
   <%@ include file="/WEB-INF/pages/recentlyViewedProducts.jsp"%>
 </tags:master>
