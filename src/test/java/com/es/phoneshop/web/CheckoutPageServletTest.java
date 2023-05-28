@@ -108,7 +108,7 @@ public class CheckoutPageServletTest {
         when(request.getParameter("firstName")).thenReturn("gertgr");
         when(request.getParameter("lastName")).thenReturn("regregre");
         when(request.getParameter("phone")).thenReturn("375123456789");
-        when(request.getParameter("deliveryDate")).thenReturn("2023-05-17");
+        when(request.getParameter("deliveryDate")).thenReturn("2222-06-17");
         when(request.getParameter("deliveryAddress")).thenReturn("regrege");
         when(request.getParameter("paymentMethod")).thenReturn("CREDIT_CARD");
 
@@ -125,7 +125,12 @@ public class CheckoutPageServletTest {
         errors.put("firstName", "Value is required");
         when(cartService.getCart(request)).thenReturn(cart);
         when(orderService.createOrder(cart)).thenReturn(order);
-        when(request.getParameter("firstName")).thenReturn(null);
+        when(request.getParameter("firstName")).thenReturn("");
+        when(request.getParameter("lastName")).thenReturn("");
+        when(request.getParameter("phone")).thenReturn("");
+        when(request.getParameter("deliveryDate")).thenReturn("");
+        when(request.getParameter("deliveryAddress")).thenReturn("");
+        when(request.getParameter("paymentMethod")).thenReturn("");
 
         servlet.doPost(request, response);
 

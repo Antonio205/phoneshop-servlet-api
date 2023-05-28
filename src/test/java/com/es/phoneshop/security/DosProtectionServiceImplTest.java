@@ -40,7 +40,7 @@ public class DosProtectionServiceImplTest {
     public void givenIncorrectCountNumber_whenIsAllowed_thenReturnFalse() {
         String ip = "127.0.0.3";
 
-        simulateRequests(ip, 21);
+        simulateRequests(ip, 501);
         boolean result = dosProtectionService.isAllowed(ip);
 
         assertFalse(result);

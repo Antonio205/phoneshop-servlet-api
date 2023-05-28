@@ -32,6 +32,10 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     public void save(T item) {
         lock.writeLock().lock();
         try {
+            if (item == null) {
+                throw new NullPointerException("Item cannot be null");
+            }
+
             if (items.contains(item)) {
                 int index = items.indexOf(item);
                 items.set(index, item);

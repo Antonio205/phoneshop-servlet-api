@@ -1,5 +1,6 @@
 package com.es.phoneshop.dao.impl;
 
+import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.order.Order;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,12 +31,12 @@ public class OrderDaoImplTest {
 
     @Test
     public void givenExistingId_whenGetItem_thenReturnOrder() {
-        long nonExistingId = 999L;
+        long existingId = 200L;
         Order order = new Order();
-        order.setId(999L);
+        order.setId(existingId);
         orderDao.getItems().add(order);
 
-        Optional<Order> result = orderDao.getItem(nonExistingId);
+        Optional<Order> result = orderDao.getItem(existingId);
 
         assertTrue(result.isPresent());
         assertEquals(result.get(), order);
@@ -52,13 +53,14 @@ public class OrderDaoImplTest {
         assertTrue(items.contains(newOrder));
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void givenNullOrder_whenSave_thenNotSaveNullOrder() {
         Order order = null;
 
         orderDao.save(order);
 
-        assertFalse(orderDao.getOrders().contains(order));
+        assertFalse(orderDao.getItems().contains(order));
+        orderDao.getItems().clear();
     }
 
 }

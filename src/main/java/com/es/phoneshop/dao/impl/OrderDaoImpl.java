@@ -10,10 +10,8 @@ public class OrderDaoImpl extends GenericDaoImpl<Order> implements OrderDao {
 
     private static OrderDaoImpl instance;
 
-    private List<Order> orders;
-
     private OrderDaoImpl() {
-        this.orders = new ArrayList<>();
+
     }
 
     public static synchronized OrderDaoImpl getInstance() {
@@ -21,14 +19,6 @@ public class OrderDaoImpl extends GenericDaoImpl<Order> implements OrderDao {
             instance = new OrderDaoImpl();
         }
         return instance;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
     }
 
     @Override
