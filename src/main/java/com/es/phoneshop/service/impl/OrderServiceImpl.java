@@ -16,7 +16,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private static OrderServiceImpl instance;
-    private OrderDaoImpl orderDao;
+    private OrderDao orderDao;
 
     private OrderServiceImpl() {
         orderDao = OrderDaoImpl.getInstance();
@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         return new BigDecimal(5);
     }
 
-    public void setOrderDao(OrderDao orderDao) {
-        this.orderDao = (OrderDaoImpl) orderDao;
+    public void setOrderDao(OrderDaoImpl orderDao) {
+        this.orderDao = orderDao;
     }
 }

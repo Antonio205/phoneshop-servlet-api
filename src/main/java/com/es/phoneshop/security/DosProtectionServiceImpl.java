@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DosProtectionServiceImpl implements DosProtectionService {
 
-    private static final long THRESHOLD = 20;
+    private static final long THRESHOLD = 500;
     private static final long MINUTE_IN_MILLISECONDS = 60000;
     private static DosProtectionServiceImpl instance;
 

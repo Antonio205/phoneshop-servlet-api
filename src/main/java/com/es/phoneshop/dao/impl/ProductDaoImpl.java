@@ -98,7 +98,7 @@ public class ProductDaoImpl extends GenericDaoImpl<Product> implements ProductDa
     public List<Product> findProducts() {
         productsLock.readLock().lock();
         try {
-            return super.items.stream()
+            return super.getItems().stream()
                     .filter(product -> product.getPrice() != null)
                     .filter(product -> product.getPrice().compareTo(BigDecimal.ZERO) > 0)
                     .filter(product -> product.getStock() > 0)
@@ -112,10 +112,10 @@ public class ProductDaoImpl extends GenericDaoImpl<Product> implements ProductDa
     public void delete(long id) throws ProductNotFoundException {
         productsLock.writeLock().lock();
         try {
-            super.items.stream()
+            super.getItems().stream()
                     .filter(product -> id == product.getId())
                     .findAny()
-                    .map(product -> super.items.remove(product))
+                    .map(product -> super.getItems().remove(product))
                     .orElseThrow(ProductNotFoundException::new);
         } finally {
             productsLock.writeLock().unlock();

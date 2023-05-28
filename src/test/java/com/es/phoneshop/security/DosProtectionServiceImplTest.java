@@ -1,5 +1,7 @@
 package com.es.phoneshop.security;
 
+import java.util.stream.IntStream;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,9 +47,9 @@ public class DosProtectionServiceImplTest {
     }
 
     private void simulateRequests(String ip, int count) {
-        for (int i = 0; i < count; i++) {
-            dosProtectionService.isAllowed(ip);
-        }
+        IntStream.range(0, count)
+                .forEach(i -> dosProtectionService.isAllowed(ip));
     }
+
 }
 

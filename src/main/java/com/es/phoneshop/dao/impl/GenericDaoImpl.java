@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    protected List<T> items;
+    private List<T> items;
 
     public GenericDaoImpl() {
         this.items = new ArrayList<>();

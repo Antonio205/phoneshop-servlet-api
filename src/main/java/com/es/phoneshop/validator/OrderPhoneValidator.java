@@ -15,9 +15,9 @@ public class OrderPhoneValidator {
         return instance;
     }
 
-    public boolean validatePhoneFormat(String quantityInput) {
+    public boolean validatePhoneFormat(String phoneInput) {
         String regex = "^(\\+?375\\d{9}|80\\d{9})$";
 
-        return quantityInput.matches(regex);
+        return phoneInput.matches(regex);
     }
 }

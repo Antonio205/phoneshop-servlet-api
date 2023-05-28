@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.validator.OrderDateValidator;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.order.PaymentMethod;
@@ -53,7 +54,7 @@ public class CheckoutPageServlet extends HttpServlet {
         setRequiredValue(request, "firstName", errors, order::setFirstName);
         setRequiredValue(request, "lastName", errors, order::setLastName);
         setPhoneMethod(request, errors, order);
-        setRequiredValue(request, "deliveryDate", errors, order::setDeliveryDate);
+        setDeliveryDate(request, errors, order);
         setRequiredValue(request, "deliveryAddress", errors, order::setDeliveryAddress);
         setPaymentMethod(request, errors, order);
 
@@ -69,9 +70,22 @@ public class CheckoutPageServlet extends HttpServlet {
         }
     }
 
+    private void setDeliveryDate(HttpServletRequest request, Map<String, String> errors, Order order) {
+        String value = request.getParameter("deliveryDate");
+        OrderDateValidator orderDateValidator = OrderDateValidator.getInstance();
+
+        if (value.isEmpty()) {
+            errors.put("deliveryDate", "Value is required");
+        } else if (!orderDateValidator.validateDateFormat(value)) {
+            errors.put("deliveryDate", "Incorrect date, must be tomorrow or later");
+        } else {
+            order.setDeliveryDate(value);
+        }
+    }
+
     private void setRequiredValue(HttpServletRequest request, String parametr, Map<String, String> errors, Consumer<String> consumer) {
         String value = request.getParameter(parametr);
-        if (value == null || value.isEmpty()) {
+        if (value.isEmpty()) {
             errors.put(parametr, "Value is required");
         } else {
             consumer.accept(value);
@@ -82,7 +96,7 @@ public class CheckoutPageServlet extends HttpServlet {
         String value = request.getParameter("phone");
         OrderPhoneValidator orderPhoneValidator = OrderPhoneValidator.getInstance();
 
-        if (value == null || value.isEmpty()) {
+        if (value.isEmpty()) {
             errors.put("phone", "Value is required");
         } else if (!orderPhoneValidator.validatePhoneFormat(request.getParameter("phone"))) {
             errors.put("phone", "Phone incorrect, must start with 375 or 80");
@@ -93,7 +107,7 @@ public class CheckoutPageServlet extends HttpServlet {
 
     private void setPaymentMethod(HttpServletRequest request, Map<String, String> errors, Order order) {
         String value = request.getParameter("paymentMethod");
-        if (value == null || value.isEmpty()) {
+        if (value.isEmpty()) {
             errors.put("paymentMethod", "Value is required");
         } else {
             order.setPaymentMethod(PaymentMethod.valueOf(value));

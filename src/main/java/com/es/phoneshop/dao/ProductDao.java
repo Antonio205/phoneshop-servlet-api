@@ -4,9 +4,8 @@ import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface ProductDao {
+public interface ProductDao extends GenericDao<Product> {
 
     List<Product> findProducts(String query, String sortField, String sortOrder);
 

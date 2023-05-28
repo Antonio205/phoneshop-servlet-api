@@ -7,8 +7,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class OrderDaoImplTest {
@@ -21,10 +20,25 @@ public class OrderDaoImplTest {
     }
 
     @Test
-    public void givenNonExistingId_whenGetItem__thenReturnEmptyOptional() {
+    public void givenNonExistingId_whenGetItem_thenReturnEmptyOptional() {
         long nonExistingId = 999L;
+
         Optional<Order> result = orderDao.getItem(nonExistingId);
+
         assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void givenExistingId_whenGetItem_thenReturnOrder() {
+        long nonExistingId = 999L;
+        Order order = new Order();
+        order.setId(999L);
+        orderDao.getItems().add(order);
+
+        Optional<Order> result = orderDao.getItem(nonExistingId);
+
+        assertTrue(result.isPresent());
+        assertEquals(result.get(), order);
     }
 
     @Test
@@ -37,4 +51,14 @@ public class OrderDaoImplTest {
         List<Order> items = orderDao.getItems();
         assertTrue(items.contains(newOrder));
     }
+
+    @Test
+    public void givenNullOrder_whenSave_thenNotSaveNullOrder() {
+        Order order = null;
+
+        orderDao.save(order);
+
+        assertFalse(orderDao.getOrders().contains(order));
+    }
+
 }
