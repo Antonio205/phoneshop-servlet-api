@@ -8,7 +8,7 @@ import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.order.PaymentMethod;
 import com.es.phoneshop.service.OrderService;
-import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.service.ProductService;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -16,11 +16,13 @@ import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
 
+    private static ProductService productService;
     private static OrderServiceImpl instance;
     private OrderDao orderDao;
 
     private OrderServiceImpl() {
         orderDao = OrderDaoImpl.getInstance();
+        productService = ProductServiceImpl.getInstance();
     }
 
     public static synchronized OrderServiceImpl getInstance() {
@@ -49,10 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order) {
-        order.getItems().forEach(cartItem -> {
-            cartItem.getProduct().setStock(cartItem.getProduct().getStock() - cartItem.getQuantity());
-        });
-
+        productService.decreaseStock(order.getItems());
         orderDao.save(order);
     }
 

@@ -3,6 +3,7 @@ package com.es.phoneshop.service.impl;
 import com.es.phoneshop.dao.impl.ProductDaoImpl;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.cart.CartItem;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -44,6 +45,18 @@ public class ProductServiceImplTest {
         Product result = productService.getProduct(1L);
 
         assertEquals(product, result);
+    }
+
+    @Test
+    public void givenValidCartItemList_whenDecreaseStock_thenDecreaseStock() {
+        List<CartItem> items = new java.util.ArrayList<>();
+        Product product = new Product();
+        product.setStock(5);
+        items.add(new CartItem(product, 2));
+
+        productService.decreaseStock(items);
+
+        assertEquals(3, product.getStock());
     }
 
     @Test
