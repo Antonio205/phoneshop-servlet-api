@@ -8,6 +8,7 @@ import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.order.PaymentMethod;
 import com.es.phoneshop.service.OrderService;
+import com.es.phoneshop.model.product.Product;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -48,6 +49,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order) {
+        order.getItems().forEach(cartItem -> {
+            cartItem.getProduct().setStock(cartItem.getProduct().getStock() - cartItem.getQuantity());
+        });
+
         orderDao.save(order);
     }
 
