@@ -1,4 +1,4 @@
-package com.es.phoneshop.dao;
+package com.es.phoneshop.dao.impl;
 
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
@@ -13,10 +13,10 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
 
 public class ProductDaoImplTest {
 
@@ -33,11 +33,9 @@ public class ProductDaoImplTest {
     @Test
     public void givenProductsArray_whenFindProducts_thenReturnNotEmptyArray() {
         testProducts.add(new Product("test", "Test product", new BigDecimal(100), Currency.getInstance("USD"), 10, ""));
-        productDao.setProducts(testProducts);
+        productDao.setItems(testProducts);
 
-        List<Product> result = productDao.findProducts("Test product",
-                String.valueOf(SortField.description),
-                String.valueOf(SortOrder.asc));
+        List<Product> result = productDao.findProducts("Test product", String.valueOf(SortField.description), String.valueOf(SortOrder.asc));
 
         assertFalse(result.isEmpty());
     }
@@ -47,9 +45,9 @@ public class ProductDaoImplTest {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test", "Test product", new BigDecimal(100), usd, 10, "");
         testProducts.add(product);
-        productDao.setProducts(testProducts);
+        productDao.setItems(testProducts);
 
-        Optional<Product> optionalProduct = productDao.getProduct(product.getId());
+        Optional<Product> optionalProduct = productDao.getItem(product.getId());
 
         assertTrue(optionalProduct.isPresent());
         Product savedProduct = optionalProduct.get();
@@ -67,11 +65,9 @@ public class ProductDaoImplTest {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test", "Test product", new BigDecimal(100), usd, 10, "");
         testProducts.add(product);
-        productDao.setProducts(testProducts);
+        productDao.setItems(testProducts);
 
-        List<Product> result = productDao.findProducts("Samsung Galaxy S",
-                String.valueOf(SortField.description),
-                String.valueOf(SortOrder.asc));
+        List<Product> result = productDao.findProducts("Samsung Galaxy S", String.valueOf(SortField.description), String.valueOf(SortOrder.asc));
 
         assertNotNull(result);
     }
@@ -83,7 +79,7 @@ public class ProductDaoImplTest {
 
         productDao.save(product);
 
-        assertTrue(productDao.getProducts().contains(product));
+        assertTrue(productDao.getItems().contains(product));
     }
 
     @Test
@@ -91,13 +87,13 @@ public class ProductDaoImplTest {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test", "Test product", new BigDecimal(100), usd, 10, "");
         testProducts.add(product);
-        productDao.setProducts(testProducts);
+        productDao.setItems(testProducts);
         Product updatedProduct = product;
         updatedProduct.setDescription("New description");
         updatedProduct.setStock(20);
 
         productDao.save(updatedProduct);
-        Optional<Product> optionalProduct = productDao.getProduct(product.getId());
+        Optional<Product> optionalProduct = productDao.getItem(product.getId());
 
         assertTrue(optionalProduct.isPresent());
         updatedProduct = optionalProduct.get();
@@ -110,11 +106,11 @@ public class ProductDaoImplTest {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test-product", "Samsung Galaxy S", new BigDecimal(100), usd, 1, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         testProducts.add(product);
-        productDao.setProducts(testProducts);
+        productDao.setItems(testProducts);
 
         productDao.delete(product.getId());
 
-        assertFalse(productDao.getProducts().contains(product));
+        assertFalse(productDao.getItems().contains(product));
     }
 
     @Test
@@ -122,11 +118,9 @@ public class ProductDaoImplTest {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test-product", "Samsung Galaxy S", new BigDecimal(100), usd, -1, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         testProducts.add(product);
-        productDao.setProducts(testProducts);
+        productDao.setItems(testProducts);
 
-        List<Product> products = productDao.findProducts("Samsung Galaxy S",
-                String.valueOf(SortField.description),
-                String.valueOf(SortOrder.asc));
+        List<Product> products = productDao.findProducts("Samsung Galaxy S", String.valueOf(SortField.description), String.valueOf(SortOrder.asc));
 
         assertFalse(products.contains(product));
     }
@@ -135,7 +129,7 @@ public class ProductDaoImplTest {
     public void givenNotValidId_whenDeleteProduct_thenThrowProductNotFoundException() throws ProductNotFoundException {
         testProducts = new ArrayList<>();
         long productId = 123L;
-        productDao.setProducts(testProducts);
+        productDao.setItems(testProducts);
 
         productDao.delete(productId);
     }

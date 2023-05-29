@@ -66,7 +66,8 @@ public class CartServiceImpl implements CartService {
         HttpSession session = request.getSession();
         synchronized (session) {
             Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
-            Optional<CartItem> existingCartItem = cart.getItems().stream()
+            Optional<CartItem> existingCartItem = cart.getItems()
+                    .stream()
                     .filter(item -> item.getProduct().equals(product))
                     .findAny();
             if (product.getStock() < quantity) {
@@ -89,6 +90,16 @@ public class CartServiceImpl implements CartService {
         synchronized (session) {
             Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
             cart.getItems().removeIf(cartItem -> cartItem.getProduct().equals(product));
+            recalculateCart(cart);
+        }
+    }
+
+    @Override
+    public void clearCart(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
+            cart.getItems().clear();
             recalculateCart(cart);
         }
     }

@@ -1,10 +1,11 @@
 package com.es.phoneshop.service.impl;
 
 import com.es.phoneshop.dao.ProductDao;
-import com.es.phoneshop.dao.ProductDaoImpl;
+import com.es.phoneshop.dao.impl.ProductDaoImpl;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.model.cart.CartItem;
 
 import java.util.List;
 
@@ -26,8 +27,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProduct(long id) {
-        return productDao.getProduct(id).orElseThrow(() ->
-                        new ProductNotFoundException("Invalid id " + id + " while getting product in service"));
+        return productDao.getItem(id).orElseThrow(() ->
+                new ProductNotFoundException("Invalid id " + id + " while getting product in service"));
+    }
+
+    @Override
+    public void decreaseStock(List<CartItem> items) {
+        items.forEach(cartItem ->
+                cartItem.getProduct().setStock(cartItem.getProduct().getStock() - cartItem.getQuantity()));
     }
 
     @Override

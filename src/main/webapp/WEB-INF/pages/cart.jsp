@@ -11,6 +11,11 @@
             ${param.message}
         </div>
     </c:if>
+    <c:if test="${not empty param.checkoutError}">
+        <div class="error">
+            ${param.checkoutError}
+        </div>
+    </c:if>
     <c:if test="${not empty errors}">
         <div class="error">
             An error occurred during the update
@@ -82,6 +87,9 @@
         <p>
             <button>Update</button>
         </p>
+    </form>
+    <form action="${contextPath}/checkout">
+            <button>Checkout</button>
     </form>
     <form id="deleteCartItem" method="post">
     </form>

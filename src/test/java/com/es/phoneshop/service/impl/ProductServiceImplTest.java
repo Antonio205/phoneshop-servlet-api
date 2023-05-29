@@ -1,8 +1,9 @@
 package com.es.phoneshop.service.impl;
 
-import com.es.phoneshop.dao.ProductDaoImpl;
+import com.es.phoneshop.dao.impl.ProductDaoImpl;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.cart.CartItem;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -40,10 +41,22 @@ public class ProductServiceImplTest {
         product.setPrice(new BigDecimal(2));
         product.setStock(10);
 
-        Mockito.when(productDaoMock.getProduct(1L)).thenReturn(Optional.of(product));
+        Mockito.when(productDaoMock.getItem(1L)).thenReturn(Optional.of(product));
         Product result = productService.getProduct(1L);
 
         assertEquals(product, result);
+    }
+
+    @Test
+    public void givenValidCartItemList_whenDecreaseStock_thenDecreaseStock() {
+        List<CartItem> items = new java.util.ArrayList<>();
+        Product product = new Product();
+        product.setStock(5);
+        items.add(new CartItem(product, 2));
+
+        productService.decreaseStock(items);
+
+        assertEquals(3, product.getStock());
     }
 
     @Test
@@ -96,7 +109,7 @@ public class ProductServiceImplTest {
 
     @Test(expected = ProductNotFoundException.class)
     public void givenInvalidProductId_whenGetProduct_thenThrowProductNotFoundException() throws ProductNotFoundException {
-        Mockito.when(productDaoMock.getProduct(1L)).thenReturn(Optional.empty());
+        Mockito.when(productDaoMock.getItem(1L)).thenReturn(Optional.empty());
 
         productService.getProduct(1L);
     }
