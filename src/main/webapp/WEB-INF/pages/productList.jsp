@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
+ <c:set var="contextPath" value="${pageContext.servletContext.contextPath}"/>
 <tags:master pageTitle="Product List">
   <p>
     Welcome to Expert-Soft training!
@@ -10,6 +11,9 @@
   <p>
        Cart: ${cart}
   </p>
+  <a href="${contextPath}/advancedSearch"/>
+       Advanced search
+  </a>
 
   <c:if test="${not empty param.message && empty errors}">
          <div class="success">
@@ -25,7 +29,7 @@
     <input name="query" value="${param.query}">
     <button>Search</button>
   </form>
-  <c:set var="contextPath" value="${pageContext.servletContext.contextPath}"/>
+
   <table>
     <thead>
       <tr>

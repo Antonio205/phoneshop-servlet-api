@@ -3,10 +3,11 @@ package com.es.phoneshop.service.impl;
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.dao.impl.ProductDaoImpl;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
+import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.ProductService;
-import com.es.phoneshop.model.cart.CartItem;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
@@ -50,6 +51,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findProducts(String query, String sortField, String sortOrder) {
         return productDao.findProducts(query, sortField, sortOrder);
+    }
+
+    @Override
+    public List<Product> findProducts(String query, BigDecimal minPrice, BigDecimal maxPrice, String wordType) {
+        return productDao.findProducts(query, minPrice, maxPrice, wordType);
     }
 
     @Override
