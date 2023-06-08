@@ -5,10 +5,11 @@ import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.sort.SortField;
 import com.es.phoneshop.sort.SortOrder;
+import com.es.phoneshop.wordType.WordType;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -76,6 +77,37 @@ public class ProductDaoImpl extends GenericDaoImpl<Product> implements ProductDa
         } finally {
             productsLock.readLock().unlock();
         }
+    }
+
+    @Override
+    public List<Product> findProducts(String description, BigDecimal minPrice, BigDecimal maxPrice, String wordType) {
+        productsLock.readLock().lock();
+        try {
+            List<Product> validProducts = findProducts();
+            WordType resultWordType = WordType.valueOf(wordType);
+
+            return validProducts.stream()
+                    .filter(product -> matchesDescriptionAndPrice(product, description, minPrice, maxPrice, resultWordType))
+                    .collect(Collectors.toList());
+
+        } finally {
+            productsLock.readLock().unlock();
+        }
+    }
+
+    private boolean matchesDescriptionAndPrice(Product product, String description, BigDecimal minPrice, BigDecimal maxPrice, WordType wordType) {
+        boolean matchesDescription = description == null || (
+                wordType == WordType.ALL
+                        ? Arrays.stream(description.split("\\s+"))
+                        .allMatch(word -> product.getDescription().toLowerCase().contains(word.toLowerCase()))
+                        : Arrays.stream(description.split("\\s+"))
+                        .anyMatch(word -> product.getDescription().toLowerCase().contains(word.toLowerCase()))
+        );
+
+        boolean matchesPrice = (minPrice == null || product.getPrice().compareTo(minPrice) >= 0)
+                && (maxPrice == null || product.getPrice().compareTo(maxPrice) <= 0);
+
+        return matchesDescription && matchesPrice;
     }
 
     @Override

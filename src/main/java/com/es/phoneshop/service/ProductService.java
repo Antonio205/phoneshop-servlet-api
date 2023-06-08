@@ -1,9 +1,10 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.exceptions.ProductNotFoundException;
-import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.cart.CartItem;
+import com.es.phoneshop.model.product.Product;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -14,6 +15,8 @@ public interface ProductService {
     List<Product> findProducts(String query);
 
     List<Product> findProducts(String query, String sortField, String sortOrder);
+
+    List<Product> findProducts(String query, BigDecimal minPrice, BigDecimal maxPrice, String wordType);
 
     void decreaseStock(List<CartItem> items);
 
